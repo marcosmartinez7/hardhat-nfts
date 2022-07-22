@@ -11,13 +11,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const chainId = network.config.chainId;
 
   const constructorArgs: any = [];
-  const basicNFT = await deploy("BasicNFT", {
+  const basicNFT = await deploy("LoopStudioNFT", {
     from: deployer,
     args: constructorArgs,
     log: true,
-    waitConfirmations: 1,
+    waitConfirmations: 3,
   });
-  console.log("Deployed basicNFT");
+  console.log("Deployed LoopStudioNFT");
   if (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
@@ -26,4 +26,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 };
 export default func;
-func.tags = ["all", "basicNFT"];
+func.tags = ["all", "LoopStudioNFT"];

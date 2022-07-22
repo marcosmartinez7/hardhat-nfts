@@ -20,7 +20,5 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
-export type { BasicNFT } from "./contracts/BasicNFT";
-export { BasicNFT__factory } from "./factories/contracts/BasicNFT__factory";
-export type { RandomIpfsnft } from "./contracts/RandomIpfsNFT.sol/RandomIpfsnft";
-export { RandomIpfsnft__factory } from "./factories/contracts/RandomIpfsNFT.sol/RandomIpfsnft__factory";
+export type { LoopStudioNFT } from "./contracts/LoopStudioNFT";
+export { LoopStudioNFT__factory } from "./factories/contracts/LoopStudioNFT__factory";
