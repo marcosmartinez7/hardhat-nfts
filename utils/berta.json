@@ -1,7 +1,7 @@
 {
   "name": "PUG",
   "description": "An adorable dog!",
-  "image": "https://ipfs.io/ipfs/QmSsYRx3LpDAb1GZQm7zZ1AuHZjfbPkD6J7s9r41xu1mf8?filename=pug.png",
+  "image": "https://bafybeibr43miauqiadehyqbgssfg3pgcod2d4unjbt6eqvbwtebmw5ob7e.ipfs.infura-ipfs.io/",
   "attributes": [
     {
       "trait_type": "cuteness",
