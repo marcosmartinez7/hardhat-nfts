@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -34,10 +35,15 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "getChanceArray()": FunctionFragment;
     "getCharacterByModdedRng(uint256)": FunctionFragment;
+    "getCharacterURI(uint256)": FunctionFragment;
+    "getMintFee()": FunctionFragment;
+    "getTokenCounter()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
+    "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "requestNft()": FunctionFragment;
     "s_tokenCounter()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -47,6 +53,8 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
+    "withdraw()": FunctionFragment;
   };
 
   getFunction(
@@ -56,10 +64,15 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
       | "getApproved"
       | "getChanceArray"
       | "getCharacterByModdedRng"
+      | "getCharacterURI"
+      | "getMintFee"
+      | "getTokenCounter"
       | "isApprovedForAll"
       | "name"
+      | "owner"
       | "ownerOf"
       | "rawFulfillRandomWords"
+      | "renounceOwnership"
       | "requestNft"
       | "s_tokenCounter"
       | "safeTransferFrom(address,address,uint256)"
@@ -69,6 +82,8 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
       | "symbol"
       | "tokenURI"
       | "transferFrom"
+      | "transferOwnership"
+      | "withdraw"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -92,10 +107,23 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getCharacterURI",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMintFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenCounter",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
@@ -103,6 +131,10 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "rawFulfillRandomWords",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "requestNft",
@@ -150,6 +182,11 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -166,13 +203,27 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getCharacterURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getMintFee", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokenCounter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "rawFulfillRandomWords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "requestNft", data: BytesLike): Result;
@@ -202,15 +253,26 @@ export interface RandomIpfsNFTInterface extends utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "NftMinted(uint8,address)": EventFragment;
+    "NftRequested(uint256,address)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NftMinted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NftRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -237,6 +299,37 @@ export type ApprovalForAllEvent = TypedEvent<
 >;
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
+
+export interface NftMintedEventObject {
+  char: number;
+  requested: string;
+}
+export type NftMintedEvent = TypedEvent<[number, string], NftMintedEventObject>;
+
+export type NftMintedEventFilter = TypedEventFilter<NftMintedEvent>;
+
+export interface NftRequestedEventObject {
+  requestId: BigNumber;
+  requested: string;
+}
+export type NftRequestedEvent = TypedEvent<
+  [BigNumber, string],
+  NftRequestedEventObject
+>;
+
+export type NftRequestedEventFilter = TypedEventFilter<NftRequestedEvent>;
+
+export interface OwnershipTransferredEventObject {
+  previousOwner: string;
+  newOwner: string;
+}
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -302,6 +395,15 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number]>;
 
+    getCharacterURI(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getMintFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getTokenCounter(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -309,6 +411,8 @@ export interface RandomIpfsNFT extends BaseContract {
     ): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -321,8 +425,12 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    requestNft(
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    requestNft(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     s_tokenCounter(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -356,7 +464,7 @@ export interface RandomIpfsNFT extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     tokenURI(
-      arg0: PromiseOrValue<BigNumberish>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -364,6 +472,15 @@ export interface RandomIpfsNFT extends BaseContract {
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -393,6 +510,15 @@ export interface RandomIpfsNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  getCharacterURI(
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getTokenCounter(overrides?: CallOverrides): Promise<BigNumber>;
+
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
@@ -400,6 +526,8 @@ export interface RandomIpfsNFT extends BaseContract {
   ): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -412,8 +540,12 @@ export interface RandomIpfsNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  requestNft(
+  renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  requestNft(
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   s_tokenCounter(overrides?: CallOverrides): Promise<BigNumber>;
@@ -447,7 +579,7 @@ export interface RandomIpfsNFT extends BaseContract {
   symbol(overrides?: CallOverrides): Promise<string>;
 
   tokenURI(
-    arg0: PromiseOrValue<BigNumberish>,
+    tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -455,6 +587,15 @@ export interface RandomIpfsNFT extends BaseContract {
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  transferOwnership(
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdraw(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -484,6 +625,15 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<number>;
 
+    getCharacterURI(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenCounter(overrides?: CallOverrides): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -491,6 +641,8 @@ export interface RandomIpfsNFT extends BaseContract {
     ): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -502,6 +654,8 @@ export interface RandomIpfsNFT extends BaseContract {
       randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     requestNft(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -536,7 +690,7 @@ export interface RandomIpfsNFT extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<string>;
 
     tokenURI(
-      arg0: PromiseOrValue<BigNumberish>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -546,6 +700,13 @@ export interface RandomIpfsNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdraw(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -570,6 +731,30 @@ export interface RandomIpfsNFT extends BaseContract {
       operator?: PromiseOrValue<string> | null,
       approved?: null
     ): ApprovalForAllEventFilter;
+
+    "NftMinted(uint8,address)"(
+      char?: null,
+      requested?: null
+    ): NftMintedEventFilter;
+    NftMinted(char?: null, requested?: null): NftMintedEventFilter;
+
+    "NftRequested(uint256,address)"(
+      requestId?: PromiseOrValue<BigNumberish> | null,
+      requested?: null
+    ): NftRequestedEventFilter;
+    NftRequested(
+      requestId?: PromiseOrValue<BigNumberish> | null,
+      requested?: null
+    ): NftRequestedEventFilter;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
@@ -607,6 +792,15 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getCharacterURI(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenCounter(overrides?: CallOverrides): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -614,6 +808,8 @@ export interface RandomIpfsNFT extends BaseContract {
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -626,8 +822,12 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    requestNft(
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    requestNft(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     s_tokenCounter(overrides?: CallOverrides): Promise<BigNumber>;
@@ -661,7 +861,7 @@ export interface RandomIpfsNFT extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenURI(
-      arg0: PromiseOrValue<BigNumberish>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -669,6 +869,15 @@ export interface RandomIpfsNFT extends BaseContract {
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -697,6 +906,15 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getCharacterURI(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMintFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getTokenCounter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -704,6 +922,8 @@ export interface RandomIpfsNFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -716,8 +936,12 @@ export interface RandomIpfsNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    requestNft(
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    requestNft(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     s_tokenCounter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -751,7 +975,7 @@ export interface RandomIpfsNFT extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenURI(
-      arg0: PromiseOrValue<BigNumberish>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -759,6 +983,15 @@ export interface RandomIpfsNFT extends BaseContract {
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
