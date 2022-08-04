@@ -18,7 +18,7 @@ const metadataTemplate = {
   ],
 };
 
-const FUND_AMOUNT = 1000000000000000000;
+const FUND_AMOUNT = "1000000000000000000";
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
   const { deploy, log } = deployments;
@@ -41,7 +41,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const tx = await vrFCoordinatorV2Mock.createSubscription();
     const txReceipt = await tx.wait(1);
     subscriptionId = txReceipt.events[0].args.subId;
-    await vrFCoordinatorV2Mock.fundSubscription(subscriptionId, FUND_AMOUNT);
+    const txFund = await vrFCoordinatorV2Mock.fundSubscription(
+      subscriptionId,
+      FUND_AMOUNT
+    );
+    await txFund.wait(1);
   } else {
     vrfCoordinatorV2Address = networkConfig[chainId].vrfCoordinatorV2;
     subscriptionId = networkConfig[chainId].subscriptionId;
@@ -61,7 +65,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: args,
     log: true,
-    waitConfirmations: 4,
+    waitConfirmations: 1,
   });
   log("------------------------------");
   if (
