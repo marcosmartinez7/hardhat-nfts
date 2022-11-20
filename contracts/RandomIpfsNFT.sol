@@ -44,7 +44,7 @@ contract RandomIpfsNFT is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint64 subscriptionId,
         bytes32 gasLane,
         uint32 callbackGasLimit,
-        string[3] memory characterUris,
+        string[5] memory characterUris,
         uint256 mintFee
     ) VRFConsumerBaseV2(vrfCoordinatorV2) ERC721("Random Loop NFT", "RNDLOOP") {
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);

@@ -17,12 +17,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     waitConfirmations: 3,
   });
   console.log("Deployed LoopStudioNFT");
-  /*if (
+  if (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
   ) {
     await verify(basicNFT.address, constructorArgs);
-  }*/
+  }
 };
 export default func;
 func.tags = ["all", "LoopStudioNFT"];

@@ -6,7 +6,7 @@ pragma solidity ^0.8.15;
 contract LoopStudioNFT is ERC721URIStorage {
     uint256 private tokenCounter;
 
-    constructor() ERC721("LoopStudio", "LOOP") {
+    constructor() ERC721("DogsCollection", "DOG") {
         tokenCounter = 0;
     }
 

@@ -32,4 +32,4 @@ export const networkConfig: { [key: number]: any } = {
 
 export const developmentChains = ["hardhat", "localhost"];
 export const DECIMALS = 18;
-export const INITIAL_ANSWER = "200000000000000000000";
+export const INITIAL_ANSWER = "2000000000000000000000";
